@@ -132,16 +132,16 @@ const certificationCards = [
     image: '/cert-aws-cloud-foundations.png',
   },
   {
-    title: 'Managing Cybersecurity Incidents and Disasters',
-    issuer: 'Kennesaw State University',
-    year: '2024',
-    image: '/cert-cybersecurity-incidents-disasters.png',
-  },
-  {
     title: 'TRON: Team Champion Recognition',
     issuer: '7th Infantry Division, Philippine Army',
     year: '2025',
     image: '/cert-tron.jpg',
+  },
+  {
+    title: 'Managing Cybersecurity Incidents and Disasters',
+    issuer: 'Kennesaw State University',
+    year: '2024',
+    image: '/cert-cybersecurity-incidents-disasters.png',
   },
 ];
 
