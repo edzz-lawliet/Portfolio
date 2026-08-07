@@ -228,6 +228,17 @@ const galleryCards = [
   },
 ];
 
+const getVisibleGalleryCards = () => {
+  if (typeof window === 'undefined') return 4;
+
+  const width = window.innerWidth;
+
+  if (width <= 480) return 1;
+  if (width <= 768) return 2;
+  if (width <= 1024) return 3;
+  return 4;
+};
+
 export default function Header() {
   const [theme, setTheme] = useState<'light' | 'dark'>(() => {
     const savedTheme = localStorage.getItem('portfolio-theme');
@@ -237,7 +248,7 @@ export default function Header() {
   const [expanded, setExpanded] = useState(false);
   const [showAllCertificates, setShowAllCertificates] = useState(false);
   const [currentGalleryIndex, setCurrentGalleryIndex] = useState(0);
-  const [visibleGalleryCards, setVisibleGalleryCards] = useState(() => (window.innerWidth <= 720 ? 2 : 4));
+  const [visibleGalleryCards, setVisibleGalleryCards] = useState(() => getVisibleGalleryCards());
 
   useEffect(() => {
     document.documentElement.dataset.theme = theme;
@@ -246,7 +257,7 @@ export default function Header() {
 
   useEffect(() => {
     const handleResize = () => {
-      setVisibleGalleryCards(window.innerWidth <= 720 ? 2 : 4);
+      setVisibleGalleryCards(getVisibleGalleryCards());
     };
 
     window.addEventListener('resize', handleResize);
@@ -282,7 +293,13 @@ export default function Header() {
       <section className="profile-stage">
         <div className="profile-top-row">
           <div className="profile-photo-wrap">
-            <img src={portfolioData.profileImage} alt={portfolioData.name} className="profile-image" />
+            <img
+              src={portfolioData.profileImage}
+              alt={portfolioData.name}
+              className="profile-image"
+              loading="eager"
+              decoding="async"
+            />
           </div>
 
           <div className="profile-header-info">
@@ -326,7 +343,8 @@ export default function Header() {
               {theme === 'dark' ? <Sun size={17} aria-hidden="true" /> : <Moon size={17} aria-hidden="true" />}
               <span>{theme === 'dark' ? 'Light' : 'Dark'}</span>
             </button>
-            <button className="profile-download-cv" onClick={handleDownloadCV}>
+
+            <button className="profile-download-cv" type="button" onClick={handleDownloadCV}>
               Download CV
             </button>
           </div>
@@ -389,7 +407,12 @@ export default function Header() {
           ))}
         </section>
 
-        <button className="toolbox-toggle" onClick={() => setExpanded((value) => !value)} aria-expanded={expanded}>
+        <button
+          className="toolbox-toggle"
+          type="button"
+          onClick={() => setExpanded((value) => !value)}
+          aria-expanded={expanded}
+        >
           {expanded ? <Minus size={18} strokeWidth={2.4} /> : <Plus size={18} strokeWidth={2.4} />}
           <span>{expanded ? 'Show less' : 'View more tools'}</span>
         </button>
@@ -411,7 +434,13 @@ export default function Header() {
                 target="_blank"
                 rel="noopener noreferrer"
               >
-                <img className={`showcase-image ${project.imageStyle === 'contain' ? 'showcase-image--contain' : ''}`} src={project.image} alt={project.title} />
+                <img
+                  className={`showcase-image ${project.imageStyle === 'contain' ? 'showcase-image--contain' : ''}`}
+                  src={project.image}
+                  alt={project.title}
+                  loading="lazy"
+                  decoding="async"
+                />
               </a>
 
               <div className="showcase-content">
@@ -484,7 +513,12 @@ export default function Header() {
             ))}
         </div>
 
-        <button className="certifications-toggle" onClick={() => setShowAllCertificates((value) => !value)} aria-expanded={showAllCertificates}>
+        <button
+          className="certifications-toggle"
+          type="button"
+          onClick={() => setShowAllCertificates((value) => !value)}
+          aria-expanded={showAllCertificates}
+        >
           <span>{showAllCertificates ? 'Show less' : 'View all certificates'}</span>
           <svg className={`certifications-toggle-chevron ${showAllCertificates ? 'is-open' : ''}`} viewBox="0 0 24 24" aria-hidden="true">
             <path d="M6 9l6 6 6-6" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
@@ -532,35 +566,39 @@ export default function Header() {
       <section className="gallery-stage">
         <div className="gallery-content">
           <header className="gallery-header">
-          <div className="gallery-title-wrap">
-            <GraduationCap size={28} strokeWidth={1.5} className="gallery-icon" />
-            <h2 className="gallery-title">Gallery</h2>
-          </div>
-          <div className="gallery-nav">
-            <button className="gallery-nav-btn" onClick={handleGalleryPrev} aria-label="Previous gallery item">
-              <ChevronLeft size={24} strokeWidth={2} />
-            </button>
-            <button className="gallery-nav-btn" onClick={handleGalleryNext} aria-label="Next gallery item">
-              <ChevronRight size={24} strokeWidth={2} />
-            </button>
-          </div>
-        </header>
+            <div className="gallery-title-wrap">
+              <GraduationCap size={28} strokeWidth={1.5} className="gallery-icon" />
+              <h2 className="gallery-title">Gallery</h2>
+            </div>
 
-        <div className="gallery-carousel">
-          <div className="gallery-track" style={{ transform: `translateX(calc(-${currentGalleryIndex} * (${100 / visibleGalleryCards}% + 20px)))` }}>
-            {galleryCards.map((card) => (
-              <div className="gallery-card-wrapper" key={card.title}>
-                <article className="gallery-card">
-                  <img src={card.image} alt={card.title} className="gallery-image" />
-                  <div className="gallery-overlay">
-                    <h3 className="gallery-card-title">{card.title}</h3>
-                    <p className="gallery-card-category">{card.category}</p>
-                  </div>
-                </article>
-              </div>
-            ))}
+            <div className="gallery-nav">
+              <button className="gallery-nav-btn" type="button" onClick={handleGalleryPrev} aria-label="Previous gallery item">
+                <ChevronLeft size={24} strokeWidth={2} />
+              </button>
+              <button className="gallery-nav-btn" type="button" onClick={handleGalleryNext} aria-label="Next gallery item">
+                <ChevronRight size={24} strokeWidth={2} />
+              </button>
+            </div>
+          </header>
+
+          <div className="gallery-carousel">
+            <div
+              className="gallery-track"
+              style={{ transform: `translateX(calc(-${currentGalleryIndex} * (${100 / visibleGalleryCards}% + 20px)))` }}
+            >
+              {galleryCards.map((card) => (
+                <div className="gallery-card-wrapper" key={card.title}>
+                  <article className="gallery-card">
+                    <img src={card.image} alt={card.title} className="gallery-image" loading="lazy" decoding="async" />
+                    <div className="gallery-overlay">
+                      <h3 className="gallery-card-title">{card.title}</h3>
+                      <p className="gallery-card-category">{card.category}</p>
+                    </div>
+                  </article>
+                </div>
+              ))}
+            </div>
           </div>
-        </div>
         </div>
       </section>
 
